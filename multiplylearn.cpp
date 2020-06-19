@@ -18,16 +18,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include<iostream>
+#include <iostream>
 #include <conio.h>
 #include <fstream>
 #include <vector>
 
-
 class Tester
 {
-    int points;
-
+    // Pyta o nick usera
     std::string askUsername()
     {
         std::string username;
@@ -35,7 +33,12 @@ class Tester
         std::cin >> username;
         return username;
     }
-
+    /*  
+        Parsuje tekst wejsciowy (&txt) do wektora
+        dzielac po danym znaku (ch)
+        janek 10
+        ["janek", "10"]
+    */
     std::vector<std::string> split(const std::string &txt, char ch)
     {
         size_t pos = txt.find( ch );
@@ -54,25 +57,35 @@ class Tester
 
         return strs;
     }
-    //name score
+    /* 
+        Przyjmuje linie z pliku (lines) oraz dopisuje do nich
+        nowy wynik (currentScore) danego usera (name), jesli jest lepszy niz pierwsze
+        10 pozycji i sortuje po wyniku.
+    */
     std::vector<std::string> sortNewUserScore(std::vector<std::string> lines, int currentScore, std::string name)
     {
-        int i = 0;
-        std::vector<std::string> allLines = lines;
+        int i = 0; // wyjsciowy indeks nowego wyniku
+        std::vector<std::string> allLines = lines; // linie wyjsciowe
         for(auto l: lines)
         {
+            // podzial linii na wektor [nazwa, punkty]
             std::vector<std::string> splitted = split(l, ' ');
-            // TODO
             if(i < 10)
             {
                 std::string newLine = name + " " + std::to_string(currentScore);
                 if(std::stoi(splitted.at(1).c_str()) < currentScore)
                 {
+                    // dodaj nowy wynik na pozycje i
                     allLines.insert(allLines.begin()+i, newLine);
+                    /* jesli po dodaniu ilosc linii wyjsciowych 
+                        jest > 10 to usun ostatni element */
                     if(allLines.size() > 10)
                         allLines.pop_back();
                     break;
                 }
+                /* Edge case, jesli nie znajdzie gorszego wyniku 
+                   to push na sam koniec 
+                */
                 else if(i+1 == allLines.size()){
                     allLines.push_back(newLine);
                     break;
@@ -102,6 +115,7 @@ class Tester
                     newFile << l << "\n";
                 }
             }
+            // Edge case, jesli linie sa puste to dodaj nowy (pierwszy) wynik
             else
             {
                 newFile << username << " " << std::to_string(score) << "\n";
@@ -110,11 +124,12 @@ class Tester
         newFile.close();
     }
 
-
+/* 
+    Tylko metoda test jest publiczna, reszta jest uzywana tylko
+    przez klase Tester, przez co sa private.
+*/
 public:
-    Tester()
-    {
-    }
+    Tester(){}
     void test()
     {
         int valid = 0;
