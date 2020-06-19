@@ -252,6 +252,13 @@ int main()
     {
         showMenu();
         std::cin >> choice;
+        if(!std::cin.good())
+            {
+                std::cin.clear();
+                std::cin.ignore(INT_MAX, '\n');
+                std::cout <<"\nProsze podac poprawna opcje!\n";
+                continue;
+            }
         switch(choice)
         {
         case 1:
